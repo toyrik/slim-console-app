@@ -23,3 +23,8 @@
 ```bash
 docker-compose run --rm <контейнер> <команда>
 ```
+Для запуска консольной команды
+
+```bash
+docker-compose run --rm php-cli php bin/console view-table
+```

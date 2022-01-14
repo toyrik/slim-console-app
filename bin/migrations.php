@@ -24,6 +24,7 @@ $dbParams = [
     'password' => $settings['db']['password'],
     'host' => $settings['db']['host'],
     'driver' => $settings['db']['driver'],
+    'charset' => 'utf8',
 ];
 
 $connection = DriverManager::getConnection($dbParams);

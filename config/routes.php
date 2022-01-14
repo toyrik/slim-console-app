@@ -6,4 +6,5 @@ use Slim\App;
 
 return function (App $app) {
     $app->get('/', \App\Action\HomeAction::class)->setName('home');
+    $app->post('/users-create', \App\Action\UserCreateAction::class);
 };

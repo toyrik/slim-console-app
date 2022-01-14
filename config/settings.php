@@ -32,7 +32,7 @@ $settings['error'] = [
 
 // Database settings
 $settings['db'] = [
-    'driver' => 'mysql',
+    'driver' => 'pdo_mysql',
     'host' => 'mysql',
     'username' => 'root',
     'database' => 'slim',

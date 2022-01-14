@@ -52,7 +52,7 @@ $settings['db'] = [
 ];
 
 $settings['commands'] = [
-    \App\Console\ExampleCommand::class,
+    \App\Console\ViewTableCommand::class,
     // Add more here...
 ];
 

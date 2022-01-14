@@ -1,5 +1,6 @@
 {
     "require": {
+        "ext-pdo": "*",
         "php-di/php-di": "^6.3",
         "selective/basepath": "^2.1",
         "slim/psr7": "^1.5",

@@ -22,3 +22,7 @@ app-init: app-composer-install
 
 app-composer-install:
 	docker-compose run --rm php-cli composer install
+
+
+app-migrations-migrate:
+	docker-compose run --rm php-cli php bin/migrations.php migrations:migrate --no-interaction

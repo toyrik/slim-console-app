@@ -28,8 +28,14 @@ password: password
 ```bash
 docker-compose run --rm <контейнер> <команда>
 ```
+Для запуска миграций 
+
+```bash
+make app-migrations-migrate
+```
+
 Для запуска консольной команды
 
 ```bash
-docker-compose run --rm php-cli php bin/console view-table
+docker-compose run --rm php-cli php bin/console.php view-table
 ```

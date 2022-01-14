@@ -6,6 +6,7 @@ use Selective\BasePath\BasePathMiddleware;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Middleware\ErrorMiddleware;
+use Symfony\Component\Console\Application;
 
 return [
     'settings' => function () {
@@ -53,6 +54,16 @@ return [
         $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
 
         return new PDO($dsn, $username, $password, $flags);
+    },
+
+    Application::class => function (ContainerInterface $container) {
+        $application = new Application();
+
+        foreach ($container->get('settings')['commands'] as $class) {
+            $application->add($container->get($class));
+        }
+
+        return $application;
     },
 
 ];

@@ -48,11 +48,15 @@ final class ViewTableCommand extends Command
 
         $output->writeln(sprintf('Use database: %s', (string)$this->connection->getDatabase()));
 
+        $columns = $this->connection->createSchemaManager()->listTableColumns('users');
+
+        $headers = [];
+        foreach ($columns as $column) {
+            $headers[] = $column->getName();
+        }
 
         $list = $queryBuilder
             ->select("*")->from('users')->fetchAllAssociative();
-
-        $headers = ['id', 'name', 'email', 'first_name', 'lastname'];
         $body = [];
         foreach ($list as $value) {
             $body[] = $value;

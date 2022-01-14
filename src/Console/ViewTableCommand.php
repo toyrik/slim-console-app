@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use PDO;
+use Doctrine\DBAL\Connection;
 use PDOStatement;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,18 +14,18 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 final class ViewTableCommand extends Command
 {
-    private PDO $pdo;
+    private Connection $connection;
 
     /**
      * The constructor.
      *
-     * @param PDO $pdo The database connection
+     * @param Connection $connection The database connection
      * @param string|null $name The name
      */
-    public function __construct(PDO $pdo, ?string $name = null)
+    public function __construct(Connection $connection, ?string $name = null)
     {
         parent::__construct($name);
-        $this->pdo = $pdo;
+        $this->connection = $connection;
     }
 
     /**
@@ -43,19 +43,18 @@ final class ViewTableCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {   $io = new SymfonyStyle($input, $output);
-        $output->writeln(sprintf('Use database: %s', (string)$this->query('select database()')->fetchColumn()));
 
-        $statement = $this->query(
-            "SELECT * FROM users"
-        );
-        $list = [];
-        while ($rows = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $list[] = $rows;
-        }
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        $output->writeln(sprintf('Use database: %s', (string)$this->connection->getDatabase()));
+
+
+        $list = $queryBuilder
+            ->select("*")->from('users')->fetchAllAssociative();
 
         $headers = ['id', 'name', 'email', 'first_name', 'lastname'];
         $body = [];
-        foreach ($list as $key => $value) {
+        foreach ($list as $value) {
             $body[] = $value;
         }
 
@@ -63,16 +62,5 @@ final class ViewTableCommand extends Command
 
         // The error code, 0 on success
         return 0;
-    }
-
-    private function query(string $sql): PDOStatement
-    {
-        $statement = $this->pdo->query($sql);
-
-        if (!$statement) {
-            throw new \Exception('Query failed');
-        }
-
-        return $statement;
     }
 }

@@ -1,6 +1,7 @@
 {
     "require": {
         "ext-pdo": "*",
+        "doctrine/dbal": "^3.2",
         "php-di/php-di": "^6.3",
         "selective/basepath": "^2.1",
         "slim/psr7": "^1.5",
@@ -22,6 +23,9 @@
     },
     "config": {
         "process-timeout": 0,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     }
 }

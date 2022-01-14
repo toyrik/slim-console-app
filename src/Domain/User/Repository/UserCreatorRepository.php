@@ -2,7 +2,7 @@
 
 namespace App\Domain\User\Repository;
 
-use PDO;
+use Doctrine\DBAL\Connection;
 
 /**
  * Repository.
@@ -10,16 +10,16 @@ use PDO;
 final class UserCreatorRepository
 {
     /**
-     * @var PDO The database connection
+     * @var Connection The database connection
      */
     private $connection;
 
     /**
-     * Constructor.
+     * The constructor.
      *
-     * @param PDO $connection The database connection
+     * @param Connection $connection The database connection
      */
-    public function __construct(PDO $connection)
+    public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
@@ -33,20 +33,23 @@ final class UserCreatorRepository
      */
     public function insertUser(array $user): int
     {
+        $query = $this->connection->createQueryBuilder();
+
         $row = [
-            'username' => $user['username'],
-            'first_name' => $user['first_name'],
-            'last_name' => $user['last_name'],
-            'email' => $user['email'],
+            'username' => '"'. $user['username'] .'"',
+            'first_name' => '"'. $user['first_name'] .'"',
+            'last_name' => '"'. $user['last_name'] .'"',
+            'email' => '"'. $user['email'] .'"',
         ];
 
-        $sql = "INSERT INTO users SET 
-                username=:username, 
-                first_name=:first_name, 
-                last_name=:last_name, 
-                email=:email;";
+        try{
+            $query->insert('users')
+                ->values($row)
+                ->executeStatement();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
 
-        $this->connection->prepare($sql)->execute($row);
 
         return (int)$this->connection->lastInsertId();
     }

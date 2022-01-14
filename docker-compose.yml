@@ -14,22 +14,18 @@ services:
     build:
       context: ./docker
       dockerfile: php-fpm.docker
-    depends_on:
-      - mysql
     volumes:
       - .:/app
   php-cli:
     build:
       context: ./docker
       dockerfile: php-cli.docker
-    depends_on:
-      - mysql
     volumes:
       - .:/app
       - composer:/root/.composer/cache
 
   mysql:
-    image: mysql
+    image: mariadb:10.4
     ports:
       - 3366:3306
     environment:
@@ -38,7 +34,8 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     volumes:
-      - ./databases/mysql:/var/lib/mysql
+      - ./databases/mariadb:/var/lib/mysql
+
 
   adminer:
     image: adminer
@@ -46,5 +43,6 @@ services:
       - 8880:8080
     environment:
       ADMINER_DEFAULT_SERVER: mysql
+
 volumes:
   composer:

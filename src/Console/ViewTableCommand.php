@@ -53,10 +53,10 @@ final class ViewTableCommand extends Command
             $list[] = $rows;
         }
 
-        $headers = ['id', 'first_name', 'last_name'];
+        $headers = ['id', 'name', 'email', 'first_name', 'lastname'];
         $body = [];
         foreach ($list as $key => $value) {
-                $body[] = $value;
+            $body[] = $value;
         }
 
         $io->table($headers, $body);

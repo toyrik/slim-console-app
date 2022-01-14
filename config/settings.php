@@ -1,19 +1,59 @@
 <?php
 
-// Load default settings
-$settings = require __DIR__ . '/defaults.php';
+// Should be set to 0 in production
+error_reporting(E_ALL);
 
-// Overwrite default settings with environment specific local settings
-if (file_exists(__DIR__ . '/../../env.php')) {
-    require __DIR__ . '/../../env.php';
-} elseif (file_exists(__DIR__ . '/env.php')) {
-    require __DIR__ . '/env.php';
-}
+// Should be set to '0' in production
+ini_set('display_errors', '1');
 
-// Test and integration environment
-$environment = $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? '';
-if ($environment) {
-    require __DIR__ . '/local.' . $environment . '.php';
-}
+// Timezone
+date_default_timezone_set('Europe/Berlin');
+
+// Settings
+$settings = [];
+
+// Path settings
+$settings['root'] = dirname(__DIR__);
+
+// Error Handling Middleware settings
+$settings['error'] = [
+
+    // Should be set to false in production
+    'display_error_details' => true,
+
+    // Parameter is passed to the default ErrorHandler
+    // View in rendered output by enabling the "displayErrorDetails" setting.
+    // For the console and unit tests we also disable it
+    'log_errors' => true,
+
+    // Display error details in error log
+    'log_error_details' => true,
+];
+
+// Database settings
+$settings['db'] = [
+    'driver' => 'pdo_mysql',
+    'host' => 'mysql',
+    'username' => 'root',
+    'database' => 'slim',
+    'password' => 'root',
+    'charset' => 'utf8mb4',
+    'collation' => 'utf8mb4_unicode_ci',
+    'flags' => [
+        // Turn off persistent connections
+        PDO::ATTR_PERSISTENT => false,
+        // Enable exceptions
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        // Emulate prepared statements
+        PDO::ATTR_EMULATE_PREPARES => true,
+        // Set default fetch mode to array
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ],
+];
+
+$settings['commands'] = [
+    \App\Console\ViewTableCommand::class,
+    // Add more here...
+];
 
 return $settings;
